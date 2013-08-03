@@ -1,13 +1,13 @@
 var db = require('./lib/db.util.js')
-    user = require('./lib/user')    
+    user = require('./lib/user')
     admin = require('./lib/admin')
     plan = require('./lib/plan')
     test = require('./lib/test')
+    item = require('./lib/item')
 
 var express = require('express')
     app = express()
     port = 409
-    qs = require ('querystring')
 
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
@@ -25,6 +25,46 @@ app.configure(function() {
 
 //Test
 
+//Plan
+app.get('/plans', function(req, res) {
+    res.send({msg: "who's plan?"})
+})
+
+app.get('/:userName(\\w{3,20})/plans', function(req, res) {
+    plan.plans(req.params.userName, res)
+})
+
+//Item
+app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})', function(req, res) {
+    console.log(req.params)
+    var param = {
+        username: req.params.userName,
+        planid: req.params.planid,
+        share: null,
+        res: res
+    }
+    item.planItems(param)
+})
+
+app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})/share', function(req, res) {
+    var param = {
+        username: req.params.userName,
+        planid: req.params.planid,
+        share: null,
+        res: res
+    }
+    item.findSharedInfo(param)
+})
+
+app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})/all', function(req, res) {
+    var param = {
+        username: req.params.userName,
+        planid: req.params.planid,
+        share: 1,
+        res: res
+    }
+    item.planItems(param)
+})
 
 //:User
 app.get('/:userName(\\w{3,20})', function(req, res) {
@@ -34,33 +74,6 @@ app.get('/:userName(\\w{3,20})', function(req, res) {
 app.put('/:userName(\\w{2,20})/updateProfile/name/:newName', function(req, res) {
     user.updateName(req.params.userName, req.params.newName, res)
 })
-
-app.get('/:userName(\\w{3,20})/plans', function(req, res) {
-    plan.plans(req.params.userName, res)
-})
-
-app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})', function(req, res) {
-    plan.planItems(req.params.userName, req.params.planid, res)
-})
-
-
-//Plan
-app.get('/plans', function(req, res) {
-    res.send({msg: "who's plan?"})
-})
-
-app.get('/plans/:userName(\\w{3,20})', function(req, res) {
-    plan.plans(req.params.userName, res)
-})
-
-app.get('/plans/:userName(\\w{3,20})/:planid(\\d{1,4})', function(req, res) {
-    plan.planItems(req.params.userName, res)
-})
-
-app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})', function(req, res) {
-    plan.planItems(req.params.userName, req.params.planid, res)
-})
-
 
 //Admin
 app.get('/admin/listUser', function(req, res) {
@@ -77,12 +90,6 @@ app.put('/admin/enableUser/:userName(\\w{3,20})', function(req, res) {
 
 app.put('/admin/disableUser/:userName(\\w{3,20})', function(req, res) {
     admin.disableUser(req.params.userName, res)
-})
-
-
-//
-app.get('/maildrop/:alias', function(req, res) {
-    admin.genHash(req.params.alias, res)
 })
 
 app.listen(port)
