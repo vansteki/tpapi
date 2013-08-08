@@ -2,8 +2,8 @@ var db = require('./lib/db.util.js')
     user = require('./lib/user')
     admin = require('./lib/admin')
     plan = require('./lib/plan')
-    test = require('./lib/test')
     item = require('./lib/item')
+    test = require('./lib/test')
 
 var express = require('express')
     app = express()
@@ -11,22 +11,28 @@ var express = require('express')
 
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Methods', 'GET')
-    res.header('Access-Control-Allow-Methods', 'POST')
-    res.header('Access-Control-Allow-Methods', 'PUT')
-    res.header('Access-Control-Allow-Methods', 'DELETE')
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type')
+    res.header('Access-Control-Allow-Headers', 'Accept')
     next()
 }
 
 app.configure(function() {
   app.use(allowCrossDomain)
+  app.use(express.bodyParser());
 })
 
 //Test
+app.post('/np', function(req, res) {
+    console.log(req.body);
+    res.send({'yo':'yooooooo'});
+})
+
 
 //Plan
 app.get('/plans', function(req, res) {
+    // res.header('Access-Control-Allow-Origin', '*')
     res.send({msg: "who's plan?"})
 })
 
