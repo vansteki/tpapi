@@ -1,4 +1,7 @@
 var db = require('./lib/db.util.js')
+    $ = require('jquery')
+    _ = require('underscore')
+    curl = require('node-curl')
     user = require('./lib/user')
     admin = require('./lib/admin')
     plan = require('./lib/plan')
@@ -10,12 +13,11 @@ var express = require('express')
     port = 409
 
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
-    res.header('Access-Control-Allow-Headers', 'Accept')
-    next()
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+  res.header("Content-Type", "application/json; charset=utf-8");
+  next();
 }
 
 app.configure(function() {
@@ -24,10 +26,33 @@ app.configure(function() {
 })
 
 //Test
-app.post('/np', function(req, res) {
+app.put('/demo', function(req, res) {
+    console.log(req.params);
     console.log(req.body);
-    res.send({'yo':'yooooooo'});
+    res.send({msg: "demo PUT"})
 })
+
+app.put('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})/:updateId(\\d{1,4})', function(req, res) {
+    console.log(req.params)
+    console.log(req.body);
+    console.log('PUT');
+    res.send({msg: "put item"})
+    var param = {
+        username: req.params.userName,
+        planid: req.params.planid,
+        share: null,
+        res: res
+    }
+    // item.planItems(param)
+})
+
+app.get('/:userName(\\w{3,20})/all', function(req, res) {
+    item.all({ 
+        'userName': req.params.userName,
+        'res': res
+    })    
+})
+//end of test
 
 
 //Plan
