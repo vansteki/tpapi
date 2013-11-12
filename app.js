@@ -1,7 +1,6 @@
 var db = require('./lib/db.util.js')
     $ = require('jquery')
     _ = require('underscore')
-    curl = require('node-curl')
     user = require('./lib/user')
     admin = require('./lib/admin')
     plan = require('./lib/plan')
@@ -46,14 +45,7 @@ app.put('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})/:updateId(\\d{1,4})', fun
     // item.planItems(param)
 })
 
-app.get('/:userName(\\w{3,20})/all', function(req, res) {
-    item.all({ 
-        'userName': req.params.userName,
-        'res': res
-    })    
-})
 //end of test
-
 
 //Plan
 app.get('/plans', function(req, res) {
@@ -66,6 +58,13 @@ app.get('/:userName(\\w{3,20})/plans', function(req, res) {
 })
 
 //Item
+app.get('/:userName(\\w{3,20})/all', function(req, res) {
+    item.all({ 
+        'userName': req.params.userName,
+        'res': res
+    })    
+})
+
 app.get('/:userName(\\w{3,20})/plans/:planid(\\d{1,4})', function(req, res) {
     console.log(req.params)
     var param = {
