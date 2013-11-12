@@ -1,2 +1,4 @@
 app_config/*
 define.js
+node_modules/*
+node_modules_bk/*
