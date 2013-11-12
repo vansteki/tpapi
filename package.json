@@ -7,7 +7,7 @@
     "express": ">= 3.1.0",
     "mysql": "git://github.com/felixge/node-mysql.git",
     "jquery": ">= 1.8.3",
-    "underscore": ">= 1.5.2",
+    "underscore": ">= 1.5.2"
   },
   "engine": "node 0.8.x"
 }
